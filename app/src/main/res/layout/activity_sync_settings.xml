@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    tools:context=".SyncSettingsActivity">
+
+    <TextView
+        android:id="@+id/webDavTextView"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="@string/webdav_address"
+        app:layout_constraintBottom_toTopOf="@id/accountTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <EditText
+        android:id="@+id/webDavEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/input_webdav_address"
+        android:importantForAutofill="no"
+        android:inputType="textUri"
+        android:maxLines="1"
+        android:text="@string/default_webdav_address"
+        app:layout_constraintBottom_toBottomOf="@id/webDavTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/webDavTextView"
+        app:layout_constraintTop_toTopOf="@id/webDavTextView" />
+
+    <TextView
+        android:id="@+id/accountTextView"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="42dp"
+        android:text="@string/account"
+        app:layout_constraintBottom_toTopOf="@id/passwordTextView"
+        app:layout_constraintStart_toStartOf="@id/webDavTextView"
+        app:layout_constraintTop_toBottomOf="@id/webDavTextView" />
+
+    <EditText
+        android:id="@+id/accountEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/input_account"
+        android:importantForAutofill="no"
+        android:inputType="textEmailAddress"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@id/accountTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/accountTextView"
+        app:layout_constraintTop_toTopOf="@id/accountTextView" />
+
+    <TextView
+        android:id="@+id/passwordTextView"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="42dp"
+        android:text="@string/password"
+        app:layout_constraintBottom_toTopOf="@id/saveButton"
+        app:layout_constraintStart_toStartOf="@id/webDavTextView"
+        app:layout_constraintTop_toBottomOf="@id/accountTextView" />
+
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/input_password"
+        android:importantForAutofill="no"
+        android:inputType="textPassword"
+        android:maxLines="1"
+        app:layout_constraintBottom_toBottomOf="@id/passwordTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/passwordTextView"
+        app:layout_constraintTop_toTopOf="@id/passwordTextView" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="72dp"
+        android:text="@string/save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/passwordTextView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

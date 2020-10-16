@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">MoneyTracker</string>
+    <string name="sync_setting">同步设置</string>
+    <string name="webdav_address">WebDav 地址</string>
+    <string name="account">账户</string>
+    <string name="password">密码</string>
+    <string name="save">保存</string>
+    <string name="input_webdav_address">输入您的WebDav 地址</string>
+    <string name="input_account">输入您的账户</string>
+    <string name="input_password">输入您的密码</string>
+    <string name="default_webdav_address">https://dav.jianguoyun.com/dav/</string>
+    <string name="complete_info">请填写完整信息</string>
+    <string name="save_success">保存成功</string>
+    <string name="sync_from_network">在线同步</string>
+    <string name="check_network_and_account">读取失败，请检查账户信息和网络</string>
+    <string name="go_to_settings">请先到同步设置中配置相关信息</string>
+    <string name="sync_confirm">在线同步之后会覆盖本地账本，确定继续吗?</string>
+    <string name="ok">确定</string>
+    <string name="cancel">取消</string>
+    <string name="remote_dir_not_exits">远程目录不存在，请确认</string>
+    <string name="remote_db_not_exits">远程数据库不存在，请确认</string>
+
+</resources>
