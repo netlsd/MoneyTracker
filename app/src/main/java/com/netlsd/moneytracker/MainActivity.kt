@@ -1,12 +1,19 @@
 package com.netlsd.moneytracker
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.DataStore
 import androidx.datastore.preferences.Preferences
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.netlsd.moneytracker.databinding.ActivityMainBinding
 import com.netlsd.moneytracker.di.Injector
+import com.netlsd.moneytracker.model.SardineError
 import com.netlsd.moneytracker.ui.dialog.PromptWithProgressDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,42 +40,67 @@ class MainActivity : AppCompatActivity() {
 
         val binding = ActivityMainBinding.inflate(layoutInflater)
 
+        // todo only once
+        requestPermission.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
         binding.settingsButton.setOnClickListener {
             startActivity(Intent(this, SyncSettingsActivity::class.java))
         }
 
         sardine = Injector.provideBetterSardine()
-
         dataStore = Injector.provideWebDavDataStore(this)
 
         binding.syncButton.setOnClickListener {
-            if (account.isEmpty()) {
-                toast(getString(R.string.go_to_settings))
-            } else {
-                val dialog = PromptWithProgressDialog(this)
-                dialog.confirmListener = {
-                    sardine.setCredentials(account, password)
+            syncDatabase()
+        }
 
-                    ioScope.launch {
-                        if (!sardine.exists(databaseAddress)) {
-                            errorToast(dialog, R.string.remote_dir_not_exits)
-                            // todo check this
-                            return@launch
-                         } else {
-                            val stream = sardine.get("https://dav.jianguoyun.com/dav/MoneyTracker/new.txt")
-                            if (stream == "Error") {
-                                errorToast(dialog, R.string.remote_db_not_exits)
-                            } else {
-                                File("${filesDir}/file.db").saveStream(stream as InputStream)
-                            }
-                        }
-                    }
-                }
-                dialog.show()
+        startActivityForResult.launch(Intent(this, QueryActivity::class.java))
+
+        setContentView(binding.root)
+    }
+
+    private val startActivityForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Const.CODE_DB_UPDATED) {
+
             }
         }
 
-        setContentView(binding.root)
+    private val requestPermission =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                autoRestoreBackup()
+            } else {
+                toast("没有文件写入权限您将无法使用本地数据库恢复功能")
+            }
+        }
+
+    private fun syncDatabase() {
+        if (account.isEmpty()) {
+            toast(getString(R.string.go_to_settings))
+        } else {
+            val dialog = PromptWithProgressDialog(this)
+            dialog.message = R.string.sync_confirm
+            dialog.confirmListener = {
+                sardine.setCredentials(account, password)
+
+                ioScope.launch {
+                    if (!sardine.exists(databaseAddress)) {
+                        errorToast(dialog, R.string.remote_dir_not_exits)
+                    } else {
+                        // todo 处理异常, dismiss dialog
+                        val stream =
+                            sardine.get("https://dav.jianguoyun.com/dav/MoneyTracker/new.txt")
+                        if (stream == SardineError.UNKNOWN) {
+                            errorToast(dialog, R.string.remote_db_not_exits)
+                        } else {
+                            File("${filesDir}/file.db").saveStream(stream as InputStream)
+                        }
+                    }
+                }
+            }
+            dialog.show()
+        }
     }
 
     private fun errorToast(dialog: PromptWithProgressDialog, textId: Int) {
@@ -107,5 +139,37 @@ class MainActivity : AppCompatActivity() {
                 password = it
             }
         }
+    }
+
+    private fun autoRestoreBackup() {
+        val dbFile = getDBFile()
+        val backupDBFile = getBackupDBFile()
+
+        if (!dbFile.exists() && backupDBFile.exists()) {
+            val dialog = PromptWithProgressDialog(this)
+            dialog.message = R.string.auto_restore_backup
+            dialog.confirmListener = {
+                ioScope.launch {
+                    backupDBFile.copyTo(dbFile)
+                    uiScope.launch { dialog.dismiss() }
+                }
+            }
+            dialog.show()
+        }
+    }
+
+    private fun startBackupWork() {
+        val backupWorkRequest = OneTimeWorkRequestBuilder<BackupWorker>()
+        val data = Data.Builder()
+        data.putString(Const.KEY_ACCOUNT, account)
+        data.putString(Const.KEY_PASSWORD, password)
+        data.putString(Const.KEY_DATABASE_ADDRESS, databaseAddress)
+        backupWorkRequest.setInputData(data.build())
+        WorkManager.getInstance(this).enqueue(backupWorkRequest.build())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        startBackupWork()
     }
 }

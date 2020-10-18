@@ -12,6 +12,7 @@ import com.netlsd.moneytracker.databinding.DialogPromptWithProgresBinding
 class PromptWithProgressDialog(context: Context) : Dialog(context) {
     private lateinit var binding: DialogPromptWithProgresBinding
     var confirmListener: (()->Unit)? = null
+    var message = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +29,8 @@ class PromptWithProgressDialog(context: Context) : Dialog(context) {
             showProgressBar()
             confirmListener?.invoke()
         }
+
+        binding.promptTextView.setText(message)
 
         setContentView(binding.root)
 

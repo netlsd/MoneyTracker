@@ -7,6 +7,7 @@ import androidx.datastore.preferences.Preferences
 import androidx.datastore.preferences.edit
 import com.netlsd.moneytracker.databinding.ActivitySyncSettingsBinding
 import com.netlsd.moneytracker.di.Injector
+import com.netlsd.moneytracker.model.SardineError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -48,7 +49,7 @@ class SyncSettingsActivity : AppCompatActivity() {
                     ioScope.launch {
                         val result = sardine.list(address)
                         uiScope.launch {
-                            if (result) {
+                            if (result != SardineError.UNKNOWN) {
                                 saveWebDavInfo(address, account, password)
                                 toast(getString(R.string.save_success))
                                 finish()
@@ -64,7 +65,6 @@ class SyncSettingsActivity : AppCompatActivity() {
         // todo 第一个collect会阻塞后面的flow，尝试其他操作符
 //        uiScope.launch {
 //            Injector.provideWebDavAddress(this@SyncActivity).flowOn(Dispatchers.IO).collect {
-//                Log.e("xxxx", "124");
 //                binding.webDavEditText.setText(it)
 //            }
 //            Injector.provideWebDavAccount(this@SyncActivity).flowOn(Dispatchers.IO).collect {
@@ -92,12 +92,13 @@ class SyncSettingsActivity : AppCompatActivity() {
         }
     }
 
-
     // todo LiveData 双向绑定
     private fun loadWebDavAddress(flow: Flow<String>) {
         uiScope.launch {
             flow.flowOn(Dispatchers.IO).collect {
-                binding.webDavEditText.setText(it)
+                if (it.isNotEmpty()) {
+                    binding.webDavEditText.setText(it)
+                }
             }
         }
     }

@@ -5,6 +5,7 @@ import android.app.ProgressDialog.show
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import android.widget.Toast
 import java.io.File
 import java.io.InputStream
@@ -21,3 +22,7 @@ fun Context.toast(text: String?) = Toast.makeText(this, text, Toast.LENGTH_LONG)
 fun Context.toast(textId: Int) = Toast.makeText(this, textId, Toast.LENGTH_LONG).show()
 
 fun File.saveStream(inputStream: InputStream) = this.outputStream().use { inputStream.copyTo(it) }
+
+fun Context.getDBFile() = File(filesDir, Const.DB_FILE_NAME)
+fun getBackupDir() = File(Environment.getExternalStorageDirectory(), Const.BACKUP_DIR_NAME)
+fun getBackupDBFile() = File(getBackupDir(), Const.DB_FILE_NAME)

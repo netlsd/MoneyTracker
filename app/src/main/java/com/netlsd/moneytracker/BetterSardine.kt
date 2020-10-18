@@ -1,6 +1,8 @@
 package com.netlsd.moneytracker
 
+import com.netlsd.moneytracker.model.SardineError
 import com.thegrizzlylabs.sardineandroid.Sardine
+import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import kotlin.coroutines.suspendCoroutine
@@ -39,13 +41,12 @@ class BetterSardine {
         sardine.setCredentials(account, password)
     }
 
-    fun list (url: String) : Boolean {
+    fun list (url: String) : Any {
         return try {
-            sardine.list(url, 1)
-            true
+            return sardine.list(url, 1)
         } catch (e: IOException) {
             e.printStackTrace()
-            false
+            SardineError.UNKNOWN
         }
     }
 
@@ -54,7 +55,27 @@ class BetterSardine {
             sardine.get(url)
         } catch (e: IOException) {
             e.printStackTrace()
-            "Error"
+            SardineError.UNKNOWN
+        }
+    }
+
+    fun put(url: String, file: File) : Boolean {
+        return try {
+            sardine.put(url, file, "text/plain")
+            true
+        } catch (e: IOException) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    fun move(source: String, dest: String) : Boolean {
+        return try {
+            sardine.move(source, dest)
+            true
+        } catch (e: IOException) {
+            e.printStackTrace()
+            false
         }
     }
 
