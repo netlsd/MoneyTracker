@@ -24,6 +24,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/queryButton"
+        android:text="query"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
         app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/syncButton"
         android:layout_width="150dp"

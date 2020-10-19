@@ -7,7 +7,6 @@ class Const {
         const val WEB_DAV_DATASTORE_NAME = "webdav_settings"
         const val WEB_DAV_DATABASE_DIR_NAME = "MoneyTracker"
         const val BACKUP_DIR_NAME = "backups/MoneyTracker"
-        const val DB_FILE_NAME = "test.txt"
 
         val WEB_DAV_ADDRESS = preferencesKey<String>(name = "web_dav_address")
         val WEB_DAV_ACCOUNT = preferencesKey<String>(name = "web_dav_account")
@@ -18,5 +17,7 @@ class Const {
         const val KEY_DATABASE_ADDRESS = "database_address"
 
         const val CODE_DB_UPDATED = 200
+
+        const val DB_NAME = "note.db"
     }
 }

@@ -51,4 +51,9 @@ object Injector {
         return provideWebDavAddress(activity).map { "${it}${webDavDatabaseDir}" }
     }
 
+    private fun provideDatabase(activity: AppCompatActivity) =
+        DatabaseResolver.provideDatabase(activity)
+
+    fun provideNoteDao(activity: AppCompatActivity) =
+        DatabaseResolver.provideNoteDao(provideDatabase(activity))
 }

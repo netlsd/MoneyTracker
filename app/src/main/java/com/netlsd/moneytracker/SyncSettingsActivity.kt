@@ -49,7 +49,7 @@ class SyncSettingsActivity : AppCompatActivity() {
                     ioScope.launch {
                         val result = sardine.list(address)
                         uiScope.launch {
-                            if (result != SardineError.UNKNOWN) {
+                            if (result != null) {
                                 saveWebDavInfo(address, account, password)
                                 toast(getString(R.string.save_success))
                                 finish()

@@ -20,5 +20,6 @@
     <string name="remote_dir_not_exits">远程目录不存在，请确认</string>
     <string name="remote_db_not_exits">远程数据库不存在，请确认</string>
     <string name="auto_restore_backup">检测到备份文件存在，是否恢复</string>
+    <string name="already_update">已同步最新数据</string>
 
 </resources>

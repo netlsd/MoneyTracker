@@ -1,7 +1,8 @@
+@file:Suppress("DEPRECATION")
+
 package com.netlsd.moneytracker
 
 import android.app.Activity
-import android.app.ProgressDialog.show
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -23,6 +24,6 @@ fun Context.toast(textId: Int) = Toast.makeText(this, textId, Toast.LENGTH_LONG)
 
 fun File.saveStream(inputStream: InputStream) = this.outputStream().use { inputStream.copyTo(it) }
 
-fun Context.getDBFile() = File(filesDir, Const.DB_FILE_NAME)
+fun Context.getDBFile(): File = getDatabasePath(Const.DB_NAME)
 fun getBackupDir() = File(Environment.getExternalStorageDirectory(), Const.BACKUP_DIR_NAME)
-fun getBackupDBFile() = File(getBackupDir(), Const.DB_FILE_NAME)
+fun getBackupDBFile() = File(getBackupDir(), Const.DB_NAME)

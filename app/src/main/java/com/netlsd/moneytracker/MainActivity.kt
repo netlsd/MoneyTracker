@@ -3,7 +3,6 @@ package com.netlsd.moneytracker
 import android.Manifest
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.DataStore
@@ -13,7 +12,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.netlsd.moneytracker.databinding.ActivityMainBinding
 import com.netlsd.moneytracker.di.Injector
-import com.netlsd.moneytracker.model.SardineError
 import com.netlsd.moneytracker.ui.dialog.PromptWithProgressDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +20,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import java.io.File
-import java.io.InputStream
 
 class MainActivity : AppCompatActivity() {
     private val uiScope = CoroutineScope(Dispatchers.Main)
@@ -54,7 +51,9 @@ class MainActivity : AppCompatActivity() {
             syncDatabase()
         }
 
-        startActivityForResult.launch(Intent(this, QueryActivity::class.java))
+        binding.queryButton.setOnClickListener {
+            startActivityForResult.launch(Intent(this, QueryActivity::class.java))
+        }
 
         setContentView(binding.root)
     }
@@ -62,7 +61,7 @@ class MainActivity : AppCompatActivity() {
     private val startActivityForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Const.CODE_DB_UPDATED) {
-
+                startBackupWork()
             }
         }
 
@@ -88,13 +87,15 @@ class MainActivity : AppCompatActivity() {
                     if (!sardine.exists(databaseAddress)) {
                         errorToast(dialog, R.string.remote_dir_not_exits)
                     } else {
-                        // todo 处理异常, dismiss dialog
-                        val stream =
-                            sardine.get("https://dav.jianguoyun.com/dav/MoneyTracker/new.txt")
-                        if (stream == SardineError.UNKNOWN) {
+                        val stream = sardine.get("${databaseAddress}/${Const.DB_NAME}")
+                        if (stream == null) {
                             errorToast(dialog, R.string.remote_db_not_exits)
                         } else {
-                            File("${filesDir}/file.db").saveStream(stream as InputStream)
+                            getDBFile().saveStream(stream)
+                            uiScope.launch {
+                                dialog.dismiss()
+                                toast(R.string.already_update)
+                            }
                         }
                     }
                 }
@@ -168,8 +169,4 @@ class MainActivity : AppCompatActivity() {
         WorkManager.getInstance(this).enqueue(backupWorkRequest.build())
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        startBackupWork()
-    }
 }

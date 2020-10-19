@@ -8,13 +8,12 @@ import androidx.core.content.ContextCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.netlsd.moneytracker.di.Injector
-import com.netlsd.moneytracker.model.SardineError
-import com.thegrizzlylabs.sardineandroid.DavResource
 import java.io.File
 
 class BackupWorker(appContext: Context, workerParams: WorkerParameters) :
     Worker(appContext, workerParams) {
     private val context = appContext
+    private val dbDiffSize = 2048
 
     override fun doWork(): Result {
         backupToExternal()
@@ -38,8 +37,8 @@ class BackupWorker(appContext: Context, workerParams: WorkerParameters) :
 
         if (backupDBFile.exists()) {
             if (dbFile.exists()) {
-                // 处理差异较大的数据库
-                if (backupDBFile.length() - dbFile.length() > 512) {
+                // 处理差异较大的数据库, 大概是10条差距
+                if (backupDBFile.length() - dbFile.length() > dbDiffSize) {
                     backupDBFile.renameTo(File(getBackupDir(), timeStampDBFile()))
                 }
                 dbFile.copyTo(backupDBFile, true)
@@ -63,7 +62,7 @@ class BackupWorker(appContext: Context, workerParams: WorkerParameters) :
         }
 
         val dbFile = context.getDBFile()
-        val remoteDBUrl = "${databaseAddress}/${dbFile.name}"
+        val remoteDBUrl = "${databaseAddress}/${Const.DB_NAME}"
 
         sardine.setCredentials(account, password)
 
@@ -76,14 +75,10 @@ class BackupWorker(appContext: Context, workerParams: WorkerParameters) :
             return
         }
 
-        val fileList = sardine.list(remoteDBUrl)
+        val fileList = sardine.list(remoteDBUrl) ?: return
 
-        if (fileList == SardineError.UNKNOWN) {
-            return
-        }
-
-        val dbDavResource = (fileList as List<DavResource>)[0]
-        if (dbDavResource.contentLength - dbFile.length() > 512) {
+        val dbDavResource = fileList[0]
+        if (dbDavResource.contentLength - dbFile.length() > dbDiffSize) {
             val isMoveSuccess = sardine.move(
                 remoteDBUrl, "${databaseAddress}/${timeStampDBFile()}"
             )
