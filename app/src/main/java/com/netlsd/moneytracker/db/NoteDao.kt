@@ -8,7 +8,7 @@ interface NoteDao {
     @Query("SELECT * FROM note")
     fun getAll(): Flow<List<Note>>
 
-    @Query("SELECT * FROM note WHERE uid IN (:noteIds)")
+    @Query("SELECT * FROM note WHERE id IN (:noteIds)")
     fun loadAllByIds(noteIds: IntArray): List<Note>
 
     @Query("SELECT * FROM note WHERE name LIKE :name")

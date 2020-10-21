@@ -13,7 +13,7 @@ import java.io.File
 class BackupWorker(appContext: Context, workerParams: WorkerParameters) :
     Worker(appContext, workerParams) {
     private val context = appContext
-    private val dbDiffSize = 2048
+    private val dbDiffSize = 10 * 1024
 
     override fun doWork(): Result {
         backupToExternal()
@@ -37,7 +37,7 @@ class BackupWorker(appContext: Context, workerParams: WorkerParameters) :
 
         if (backupDBFile.exists()) {
             if (dbFile.exists()) {
-                // 处理差异较大的数据库, 大概是10条差距
+                // 数据库差异过大，进行备份
                 if (backupDBFile.length() - dbFile.length() > dbDiffSize) {
                     backupDBFile.renameTo(File(getBackupDir(), timeStampDBFile()))
                 }

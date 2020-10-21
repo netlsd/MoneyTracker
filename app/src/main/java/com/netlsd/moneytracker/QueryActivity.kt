@@ -26,15 +26,14 @@ class QueryActivity : AppCompatActivity() {
         val dao = Injector.provideNoteDao(this)
 
 //        ioScope.launch {
-//            dao.insert(Note("yang3", 40.00, "1", "2", "3"))
+//            dao.insert(Note("yang5", 40.00, "1", "2", "3", -30.00))
 //        }
 
         uiScope.launch {
             var result = ""
             dao.getAll().flowOn(Dispatchers.IO).collect {
-                for (note in it) {
-                    result += note.name + " " + note.money + "\n"
-                }
+                val note = it[it.size - 1]
+                result = note.name + " " + note.money + " " +  note.date + " " + it.size + " " + note.repay
                 uiScope.launch {
                     textView.text = result
                 }
