@@ -13,7 +13,7 @@ import java.io.File
 class BackupWorker(appContext: Context, workerParams: WorkerParameters) :
     Worker(appContext, workerParams) {
     private val context = appContext
-    private val dbDiffSize = 10 * 1024
+    private val dbDiffSize = 30 * 1024
 
     override fun doWork(): Result {
         backupToExternal()

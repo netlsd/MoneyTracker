@@ -15,9 +15,14 @@ class Const {
         const val KEY_ACCOUNT = "account"
         const val KEY_PASSWORD = "password"
         const val KEY_DATABASE_ADDRESS = "database_address"
+        const val KEY_PEOPLE_NAME = "people_name"
 
         const val CODE_DB_UPDATED = 200
 
         const val DB_NAME = "note.db"
+
+        const val PEOPLE_FILE_NAME = "people.txt"
+
+        const val SPACE = " "
     }
 }

@@ -6,13 +6,16 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NoteDao {
     @Query("SELECT * FROM note")
-    fun getAll(): Flow<List<Note>>
+    fun getAllNote(): Flow<List<Note>>
 
     @Query("SELECT * FROM note WHERE id IN (:noteIds)")
     fun loadAllByIds(noteIds: IntArray): List<Note>
 
     @Query("SELECT * FROM note WHERE name LIKE :name")
     suspend fun findByName(name: String): List<Note>
+
+    @Query("SELECT name FROM note")
+    fun getAllName(): List<String>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(vararg notes: Note)

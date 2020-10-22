@@ -27,3 +27,4 @@ fun File.saveStream(inputStream: InputStream) = this.outputStream().use { inputS
 fun Context.getDBFile(): File = getDatabasePath(Const.DB_NAME)
 fun getBackupDir() = File(Environment.getExternalStorageDirectory(), Const.BACKUP_DIR_NAME)
 fun getBackupDBFile() = File(getBackupDir(), Const.DB_NAME)
+fun Context.getPeopleNameFile() = File(filesDir, Const.PEOPLE_FILE_NAME)

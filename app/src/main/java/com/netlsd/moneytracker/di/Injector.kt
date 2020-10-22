@@ -1,5 +1,6 @@
 package com.netlsd.moneytracker.di
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.DataStore
 import androidx.datastore.preferences.Preferences
@@ -51,9 +52,9 @@ object Injector {
         return provideWebDavAddress(activity).map { "${it}${webDavDatabaseDir}" }
     }
 
-    private fun provideDatabase(activity: AppCompatActivity) =
-        DatabaseResolver.provideDatabase(activity)
+    private fun provideDatabase(context: Context) =
+        DatabaseResolver.provideDatabase(context)
 
-    fun provideNoteDao(activity: AppCompatActivity) =
-        DatabaseResolver.provideNoteDao(provideDatabase(activity))
+    fun provideNoteDao(context: Context) =
+        DatabaseResolver.provideNoteDao(provideDatabase(context))
 }

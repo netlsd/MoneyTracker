@@ -12,6 +12,7 @@ class BetterSardine {
     // todo dataStore 调用优化
     // todo 清除数据，重新测试
     // todo sardine抛出确切的异常
+    // todo 确保name包含空行 换行，并测试
 
     private lateinit var sardine: Sardine
 

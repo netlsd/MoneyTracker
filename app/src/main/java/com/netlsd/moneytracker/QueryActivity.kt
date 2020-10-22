@@ -5,8 +5,12 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.netlsd.moneytracker.db.Note
 import com.netlsd.moneytracker.di.Injector
+import com.netlsd.moneytracker.model.PeopleName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -31,7 +35,7 @@ class QueryActivity : AppCompatActivity() {
 
         uiScope.launch {
             var result = ""
-            dao.getAll().flowOn(Dispatchers.IO).collect {
+            dao.getAllNote().flowOn(Dispatchers.IO).collect {
                 val note = it[it.size - 1]
                 result = note.name + " " + note.money + " " +  note.date + " " + it.size + " " + note.repay
                 uiScope.launch {
@@ -41,9 +45,24 @@ class QueryActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.button).setOnClickListener {
-            setResult(Const.CODE_DB_UPDATED)
-            finish()
+//            setResult(Const.CODE_DB_UPDATED)
+//            finish()
+
+//            startSyncPeopleWork("张三丰")
+
+            val nameList = getPeopleNameFile().readText().split(Const.SPACE)
+            for (name in nameList) {
+                Log.e("xxxx", "name is " + name)
+            }
         }
+    }
+
+    private fun startSyncPeopleWork(name: String) {
+        val syncWorkRequest = OneTimeWorkRequestBuilder<SyncPeopleWorker>()
+        val data = Data.Builder()
+        data.putString(Const.KEY_PEOPLE_NAME, name)
+        syncWorkRequest.setInputData(data.build())
+        WorkManager.getInstance(this).enqueue(syncWorkRequest.build())
     }
 
     override fun onBackPressed() {
