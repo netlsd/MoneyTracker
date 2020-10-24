@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MoneyTracker</string>
+    <string name="app_name">记账软件</string>
     <string name="sync_setting">同步设置</string>
     <string name="webdav_address">WebDav 地址</string>
     <string name="account">账户</string>
@@ -21,5 +21,31 @@
     <string name="remote_db_not_exits">远程数据库不存在，请确认</string>
     <string name="auto_restore_backup">检测到备份文件存在，是否恢复</string>
     <string name="already_update">已同步最新数据</string>
+    <string name="query">查账</string>
+    <string name="note">记账</string>
+    <string name="name">姓名</string>
+    <string name="money">金额</string>
+    <string name="type">类型</string>
+    <string name="date">时间</string>
+    <string name="comment">备注</string>
+    <string name="loan">借款</string>
+    <string name="repay">还款</string>
+    <string name="close">关闭</string>
+    <string name="delete">删除</string>
+    <string name="edit">编辑</string>
+    <string name="confirm_del_note">确定删除这笔账单吗</string>
+    <string name="query_by_name">查询姓名</string>
+    <string name="start_date">开始时间</string>
+    <string name="end_date">结束时间</string>
+    <string name="line">---</string>
+    <string name="comment_tip"><font size="14">备注可以不填</font></string>
+    <string name="total_loan">总计借款: %1$.2f</string>
+    <string name="total_repay">总计还款: %1$.2f</string>
+    <string name="total_diff">总计差额: %1$.2f</string>
+    <string name="part_repay">部分还款</string>
+    <string name="batch">批量添加</string>
+    <string name="part_tips"><font size="14">可以不填</font></string>
+    <string name="batch_tips">此模式将锁定姓名,用于同一借记人批量添加账单</string>
+    <string name="name_empty_tips">姓名不能为空</string>
 
 </resources>

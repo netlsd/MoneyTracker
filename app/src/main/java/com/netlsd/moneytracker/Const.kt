@@ -17,7 +17,7 @@ class Const {
         const val KEY_DATABASE_ADDRESS = "database_address"
         const val KEY_PEOPLE_NAME = "people_name"
 
-        const val CODE_DB_UPDATED = 200
+        const val BROADCAST_BACKUP_DB = "backup_db"
 
         const val DB_NAME = "note.db"
 

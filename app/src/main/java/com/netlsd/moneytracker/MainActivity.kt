@@ -1,17 +1,24 @@
 package com.netlsd.moneytracker
 
 import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.DataStore
 import androidx.datastore.preferences.Preferences
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.netlsd.moneytracker.databinding.ActivityMainBinding
 import com.netlsd.moneytracker.di.Injector
+import com.netlsd.moneytracker.ui.activities.NoteActivity
+import com.netlsd.moneytracker.ui.activities.QueryConditionsActivity
 import com.netlsd.moneytracker.ui.dialog.PromptWithProgressDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,22 +26,24 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import java.io.File
 
 class MainActivity : AppCompatActivity() {
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val ioScope = CoroutineScope(Dispatchers.IO)
 
-    private lateinit var dataStore: DataStore<Preferences>
     private lateinit var sardine: BetterSardine
 
     private lateinit var databaseAddress: String
     private lateinit var account: String
     private lateinit var password: String
 
+    private var isNeedBackup = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        registerBroadcast()
 
+        sardine = Injector.provideBetterSardine()
         val binding = ActivityMainBinding.inflate(layoutInflater)
 
         // todo only once
@@ -44,26 +53,20 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, SyncSettingsActivity::class.java))
         }
 
-        sardine = Injector.provideBetterSardine()
-        dataStore = Injector.provideWebDavDataStore(this)
-
         binding.syncButton.setOnClickListener {
             syncDatabase()
         }
 
         binding.queryButton.setOnClickListener {
-            startActivityForResult.launch(Intent(this, QueryActivity::class.java))
+            startActivity(Intent(this, QueryConditionsActivity::class.java))
+        }
+
+        binding.noteButton.setOnClickListener {
+            startActivity(Intent(this, NoteActivity::class.java))
         }
 
         setContentView(binding.root)
     }
-
-    private val startActivityForResult =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Const.CODE_DB_UPDATED) {
-                startBackupWork()
-            }
-        }
 
     private val requestPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -159,6 +162,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private val broadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            isNeedBackup = true
+        }
+    }
+
+    private fun registerBroadcast() {
+        LocalBroadcastManager.getInstance(this)
+            .registerReceiver(broadcastReceiver, IntentFilter(Const.BROADCAST_BACKUP_DB))
+    }
+
+    private fun unregisterBroadcast() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
+    }
+
     private fun startBackupWork() {
         val backupWorkRequest = OneTimeWorkRequestBuilder<BackupWorker>()
         val data = Data.Builder()
@@ -169,4 +187,16 @@ class MainActivity : AppCompatActivity() {
         WorkManager.getInstance(this).enqueue(backupWorkRequest.build())
     }
 
+    override fun onStop() {
+        if (isNeedBackup) {
+            startBackupWork()
+            isNeedBackup = false
+        }
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterBroadcast()
+    }
 }
