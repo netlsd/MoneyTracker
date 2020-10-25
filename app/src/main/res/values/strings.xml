@@ -45,7 +45,10 @@
     <string name="part_repay">部分还款</string>
     <string name="batch">批量添加</string>
     <string name="part_tips"><font size="14">可以不填</font></string>
-    <string name="batch_tips">此模式将锁定姓名,用于同一借记人批量添加账单</string>
-    <string name="name_empty_tips">姓名不能为空</string>
+    <string name="name_empty_tips">请先输入姓名</string>
+    <string name="filed_not_set">请检查信息是否填写完整</string>
+    <string name="wrong_money">请输入正确格式的金额</string>
+    <string name="note_success">记账成功</string>
+    <string name="edit_success">修改成功</string>
 
 </resources>

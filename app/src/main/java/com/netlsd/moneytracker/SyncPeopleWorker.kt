@@ -13,18 +13,18 @@ class SyncPeopleWorker(appContext: Context, workerParams: WorkerParameters) :
 
     override fun doWork(): Result {
         val peopleNameFile = context.getPeopleNameFile()
-        val name = inputData.getString(Const.KEY_PEOPLE_NAME)!!
+        val name = inputData.getString(Const.KEY_PEOPLE_NAME)
 
-        if (peopleNameFile.exists()) {
-            addName(peopleNameFile, name)
+        if (!peopleNameFile.exists() || name == null) {
+            syncAll(peopleNameFile)
         } else {
-            syncAll(peopleNameFile, name)
+            addName(peopleNameFile, name)
         }
 
         return Result.success()
     }
 
-    private fun syncAll(file: File, name: String) {
+    private fun syncAll(file: File) {
         val nameList = removeTheDuplicates(dao.getAllName())
         for (i in nameList.indices) {
             file.appendText(nameList[i])
@@ -32,16 +32,10 @@ class SyncPeopleWorker(appContext: Context, workerParams: WorkerParameters) :
                 file.appendText(Const.SPACE)
             }
         }
-
-        if (!nameList.contains(name)) {
-            file.appendText("${Const.SPACE}$name")
-        }
     }
 
     private fun addName(file: File, name: String) {
-        val nameList = dao.getAllName()
-
-        if (!nameList.contains(name)) {
+        if (!context.getPeopleNameList().contains(name)) {
             file.appendText("${Const.SPACE}$name")
         }
     }

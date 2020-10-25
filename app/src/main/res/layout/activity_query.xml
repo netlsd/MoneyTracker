@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/grey_50"
     android:orientation="vertical">
 
@@ -40,6 +41,7 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        tools:listitem="@layout/item_note"
         android:layout_weight="1" />
 
     <LinearLayout

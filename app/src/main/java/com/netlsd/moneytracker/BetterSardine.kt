@@ -8,11 +8,9 @@ import java.io.InputStream
 
 class BetterSardine {
     // 这个类主要是为了解决在协程中使用sardine进行IO操作会有警告的问题
-    // todo 断网测试, 断网测试退出
+    // todo 断网->远程目录
     // todo dataStore 调用优化
-    // todo 清除数据，重新测试
     // todo sardine抛出确切的异常
-    // todo 确保name包含空行 换行，并测试
 
     private lateinit var sardine: Sardine
 

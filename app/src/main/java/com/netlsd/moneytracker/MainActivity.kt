@@ -6,11 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.datastore.DataStore
-import androidx.datastore.preferences.Preferences
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
@@ -98,6 +95,7 @@ class MainActivity : AppCompatActivity() {
                             uiScope.launch {
                                 dialog.dismiss()
                                 toast(R.string.already_update)
+                                startSyncPeopleWork(null)
                             }
                         }
                     }
@@ -155,7 +153,10 @@ class MainActivity : AppCompatActivity() {
             dialog.confirmListener = {
                 ioScope.launch {
                     backupDBFile.copyTo(dbFile)
-                    uiScope.launch { dialog.dismiss() }
+                    uiScope.launch {
+                        dialog.dismiss()
+                        startSyncPeopleWork(null)
+                    }
                 }
             }
             dialog.show()
@@ -169,8 +170,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun registerBroadcast() {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(Const.BROADCAST_BACKUP_DB)
         LocalBroadcastManager.getInstance(this)
-            .registerReceiver(broadcastReceiver, IntentFilter(Const.BROADCAST_BACKUP_DB))
+            .registerReceiver(broadcastReceiver, intentFilter)
     }
 
     private fun unregisterBroadcast() {

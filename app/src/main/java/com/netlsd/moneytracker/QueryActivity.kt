@@ -1,15 +1,13 @@
 package com.netlsd.moneytracker
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.netlsd.moneytracker.databinding.ActivityQueryBinding
 import com.netlsd.moneytracker.db.Note
 import com.netlsd.moneytracker.di.Injector
@@ -20,10 +18,11 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
-private const val EXTRA_NAME = "name";
-private const val EXTRA_START_DATE = "startDate";
-private const val EXTRA_END_DATE = "endDate";
+private const val EXTRA_NAME = "name"
+private const val EXTRA_START_DATE = "startDate"
+private const val EXTRA_END_DATE = "endDate"
 
+// todo start method
 fun Context.startQueryActivity(name: String?, startDate: String?, endDate: String?) {
     val intent = Intent(this, QueryActivity::class.java)
     intent.putExtra(EXTRA_NAME, name)
@@ -36,10 +35,13 @@ class QueryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityQueryBinding
     private val uiScope = CoroutineScope(Dispatchers.Main)
 
+    private val listAdapter = NoteListAdapter()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        registerBroadcast()
+
         val dao = Injector.provideNoteDao(this)
-        val listAdapter = NoteListAdapter()
 
         val name = intent.getStringExtra(EXTRA_NAME)
         val startDate = intent.getStringExtra(EXTRA_START_DATE).ifEmpty { "1970-01-01" }
@@ -50,7 +52,7 @@ class QueryActivity : AppCompatActivity() {
         binding.listView.setHasFixedSize(true)
         binding.listView.layoutManager = LinearLayoutManager(this)
 
-        listAdapter.onDatabaseChangeListener = {
+        listAdapter.onNoteDeletedListener = {
             sendBackupBroadcast()
             countMoney(it)
         }
@@ -63,25 +65,6 @@ class QueryActivity : AppCompatActivity() {
         }
 
         setContentView(binding.root)
-
-//        ioScope.launch {
-//            dao.insert(Note("yang5", 40.00, "1", "2", "3", -30.00))
-//        }
-
-
-//        findViewById<Button>(R.id.button).setOnClickListener {
-////            setResult(Const.CODE_DB_UPDATED)
-////            finish()
-//
-////            startSyncPeopleWork("张三丰")
-//
-//            val nameList = getPeopleNameFile().readText().split(Const.SPACE)
-//            for (name in nameList) {
-//                Log.e("xxxx", "name is " + name)
-//            }
-//        }
-
-        setContentView(binding.root)
     }
 
     private fun countMoney(notes: List<Note>) {
@@ -91,7 +74,7 @@ class QueryActivity : AppCompatActivity() {
             if (note.type == getString(R.string.loan)) {
                 totalLoan += note.money
                 if (note.repay != null) {
-                    totalRepay += note.repay
+                    totalRepay += note.repay!!
                 }
             } else {
                 totalRepay += note.money
@@ -103,17 +86,23 @@ class QueryActivity : AppCompatActivity() {
         binding.totalDiffTv.text = getString(R.string.total_diff, totalLoan - totalRepay)
     }
 
-    // todo onEdit do it
-    private fun startSyncPeopleWork(name: String) {
-        val syncWorkRequest = OneTimeWorkRequestBuilder<SyncPeopleWorker>()
-        val data = Data.Builder()
-        data.putString(Const.KEY_PEOPLE_NAME, name)
-        syncWorkRequest.setInputData(data.build())
-        WorkManager.getInstance(this).enqueue(syncWorkRequest.build())
+    private val broadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val note = intent?.getParcelableExtra<Note>(Const.EXTRA_NOTE)
+            listAdapter.updateNote(note!!)
+            countMoney(listAdapter.getAllNote())
+        }
     }
 
-    private fun sendBackupBroadcast() {
-        val intent = Intent(Const.BROADCAST_BACKUP_DB)
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+    private fun registerBroadcast() {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(Const.BROADCAST_NOTE_UPDATE)
+        LocalBroadcastManager.getInstance(this)
+            .registerReceiver(broadcastReceiver, intentFilter)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
     }
 }

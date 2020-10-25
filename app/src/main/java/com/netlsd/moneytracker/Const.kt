@@ -17,7 +17,9 @@ class Const {
         const val KEY_DATABASE_ADDRESS = "database_address"
         const val KEY_PEOPLE_NAME = "people_name"
 
-        const val BROADCAST_BACKUP_DB = "backup_db"
+        const val BROADCAST_BACKUP_DB = "com.netlsd.moneytracker.backup_db"
+        const val BROADCAST_NOTE_UPDATE = "com.netlsd.moneytracker.note_update"
+        const val EXTRA_NOTE = "note"
 
         const val DB_NAME = "note.db"
 

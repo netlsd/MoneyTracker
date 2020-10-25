@@ -1,5 +1,6 @@
 package com.netlsd.moneytracker.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -12,7 +13,7 @@ import java.util.*
 
 class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteViewHolder>() {
     private var noteList = Collections.emptyList<Note>()
-    var onDatabaseChangeListener: ((noteList: List<Note>) -> Unit)? = null
+    var onNoteDeletedListener: ((noteList: List<Note>) -> Unit)? = null
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -47,7 +48,28 @@ class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteViewHolder>() {
         }
     }
 
-    // todo why can't remove private val
+    fun addNote(note: Note) {
+        if (!noteList.contains(note)) {
+            noteList.add(0, note)
+            notifyItemInserted(0)
+        }
+    }
+
+    fun updateNote(note: Note) {
+        // indexOf can't find note in list, so i compare id
+        for ((index, n) in noteList.withIndex()){
+            if (note.id == n.id) {
+                noteList.set(index, note)
+                notifyItemChanged(index)
+                break
+            }
+        }
+    }
+
+    fun getAllNote() : List<Note> {
+        return noteList
+    }
+
     inner class NoteViewHolder(private val binding: ItemNoteBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private val context = binding.root.context
@@ -69,7 +91,7 @@ class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteViewHolder>() {
                 val dialog = NoteDialog(context, note)
                 dialog.onDeleteListener = {
                     deleteNote(note)
-                    onDatabaseChangeListener?.invoke(noteList)
+                    onNoteDeletedListener?.invoke(noteList)
                 }
                 dialog.show()
             }

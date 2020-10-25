@@ -11,6 +11,11 @@ import android.os.Environment
 import android.widget.DatePicker
 import android.widget.TextView
 import android.widget.Toast
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.netlsd.moneytracker.db.Note
 import java.io.File
 import java.io.InputStream
 import java.text.SimpleDateFormat
@@ -47,7 +52,6 @@ fun getCurrentDateString(): String {
     return df.format(Calendar.getInstance().time)
 }
 
-
 fun Context.showDatePicker(textView: TextView) {
     val c = Calendar.getInstance()
     val thisYear = c[Calendar.YEAR]
@@ -61,4 +65,31 @@ fun Context.showDatePicker(textView: TextView) {
 
     val datePickerDialog = DatePickerDialog(this, listener, thisYear, thisMonth, thisDay)
     datePickerDialog.show()
+}
+
+fun Context.sendBackupBroadcast() {
+    val intent = Intent(Const.BROADCAST_BACKUP_DB)
+    LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+}
+
+fun Context.sendNoteUpdateBroadcast(note: Note) {
+    val intent = Intent(Const.BROADCAST_NOTE_UPDATE)
+    intent.putExtra(Const.EXTRA_NOTE, note)
+    LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+}
+
+fun Context.getPeopleNameList(): List<String> {
+    return if (!getPeopleNameFile().exists()) {
+        ArrayList()
+    } else {
+        getPeopleNameFile().readText().split(Const.SPACE)
+    }
+}
+
+fun Context.startSyncPeopleWork(name: String?) {
+    val syncWorkRequest = OneTimeWorkRequestBuilder<SyncPeopleWorker>()
+    val data = Data.Builder()
+    data.putString(Const.KEY_PEOPLE_NAME, name)
+    syncWorkRequest.setInputData(data.build())
+    WorkManager.getInstance(this).enqueue(syncWorkRequest.build())
 }

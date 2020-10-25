@@ -10,11 +10,12 @@ import com.netlsd.moneytracker.R
 import com.netlsd.moneytracker.databinding.DialogNoteBinding
 import com.netlsd.moneytracker.db.Note
 import com.netlsd.moneytracker.di.Injector
+import com.netlsd.moneytracker.ui.activities.startNoteActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-// todo callback hell
+// todo callback hell, broadcast hell
 class NoteDialog(context: Context, private val note: Note) : Dialog(context) {
     var onDeleteListener: (() -> Unit)? = null
 
@@ -52,6 +53,10 @@ class NoteDialog(context: Context, private val note: Note) : Dialog(context) {
                 }
             }
             promptDialog.show()
+        }
+        binding.editButton.setOnClickListener {
+            context.startNoteActivity(note)
+            dismiss()
         }
 
         setContentView(binding.root)

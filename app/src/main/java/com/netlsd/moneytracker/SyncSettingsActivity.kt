@@ -7,7 +7,6 @@ import androidx.datastore.preferences.Preferences
 import androidx.datastore.preferences.edit
 import com.netlsd.moneytracker.databinding.ActivitySyncSettingsBinding
 import com.netlsd.moneytracker.di.Injector
-import com.netlsd.moneytracker.model.SardineError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
