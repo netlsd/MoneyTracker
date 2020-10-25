@@ -1,4 +1,4 @@
-package com.netlsd.moneytracker
+package com.netlsd.moneytracker.ui.activities
 
 import android.Manifest
 import android.content.BroadcastReceiver
@@ -12,10 +12,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.netlsd.moneytracker.*
 import com.netlsd.moneytracker.databinding.ActivityMainBinding
 import com.netlsd.moneytracker.di.Injector
-import com.netlsd.moneytracker.ui.activities.NoteActivity
-import com.netlsd.moneytracker.ui.activities.QueryConditionsActivity
 import com.netlsd.moneytracker.ui.dialog.PromptWithProgressDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

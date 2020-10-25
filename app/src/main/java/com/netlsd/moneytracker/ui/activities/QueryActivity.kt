@@ -1,4 +1,4 @@
-package com.netlsd.moneytracker
+package com.netlsd.moneytracker.ui.activities
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -8,9 +8,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.netlsd.moneytracker.Const
+import com.netlsd.moneytracker.R
 import com.netlsd.moneytracker.databinding.ActivityQueryBinding
 import com.netlsd.moneytracker.db.Note
 import com.netlsd.moneytracker.di.Injector
+import com.netlsd.moneytracker.sendBackupBroadcast
 import com.netlsd.moneytracker.ui.adapter.NoteListAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

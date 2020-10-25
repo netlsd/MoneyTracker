@@ -1,12 +1,16 @@
-package com.netlsd.moneytracker
+package com.netlsd.moneytracker.ui.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.DataStore
 import androidx.datastore.preferences.Preferences
 import androidx.datastore.preferences.edit
+import com.netlsd.moneytracker.BetterSardine
+import com.netlsd.moneytracker.Const
+import com.netlsd.moneytracker.R
 import com.netlsd.moneytracker.databinding.ActivitySyncSettingsBinding
 import com.netlsd.moneytracker.di.Injector
+import com.netlsd.moneytracker.toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

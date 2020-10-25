@@ -22,13 +22,13 @@
             android:name=".ui.activities.QueryConditionsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".QueryActivity"
+            android:name=".ui.activities.QueryActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SyncSettingsActivity"
+            android:name=".ui.activities.SyncSettingsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activities.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 private const val EXTRA_NOTE = "note"
 private const val INIT_REPAY = 0.0
 
-// todo release version, screenshot readme, git release apk, toolbar back
+// todo toolbar back
 fun Context.startNoteActivity(note: Note) {
     val intent = Intent(this, NoteActivity::class.java)
     intent.putExtra(EXTRA_NOTE, note)
