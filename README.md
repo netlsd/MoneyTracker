@@ -4,6 +4,9 @@ A simple and intutive money tracker with cloud sync android app.
 </p>
 </br>
 
+## Download
+Go to the [Releases](https://github.com/netlsd/MoneyTracker/releases/) to download the latest APK.
+
 ## Screenshots
 ![Main](screenshots/1.png)
 ![Note](screenshots/2.png)
