@@ -51,4 +51,10 @@
     <string name="note_success">记账成功</string>
     <string name="edit_success">修改成功</string>
 
+    <string name="holder_name">姓名: %s</string>
+    <string name="holder_type_money">%s: %s</string>
+    <string name="holder_part_repay">部分还款: %s</string>
+    <string name="holder_date">时间: %s</string>
+    <string name="holder_comment">备注: %s</string>
+
 </resources>

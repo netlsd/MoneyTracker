@@ -1,7 +1,7 @@
 package com.netlsd.moneytracker.ui.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -57,7 +57,7 @@ class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteViewHolder>() {
 
     fun updateNote(note: Note) {
         // indexOf can't find note in list, so i compare id
-        for ((index, n) in noteList.withIndex()){
+        for ((index, n) in noteList.withIndex()) {
             if (note.id == n.id) {
                 noteList.set(index, note)
                 notifyItemChanged(index)
@@ -66,7 +66,7 @@ class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteViewHolder>() {
         }
     }
 
-    fun getAllNote() : List<Note> {
+    fun getAllNote(): List<Note> {
         return noteList
     }
 
@@ -75,16 +75,24 @@ class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteViewHolder>() {
         private val context = binding.root.context
 
         fun bind(note: Note) {
-            binding.nameTv.text = note.name
-            binding.moneyTv.text = note.money.toString()
-            binding.typeTv.text = note.type
-            binding.dateTv.text = note.date
-            binding.commentTv.text = note.comment
+            binding.nameTv.text = context.getString(R.string.holder_name, note.name)
+            binding.typeMoneyTv.text =
+                context.getString(R.string.holder_type_money, note.type, note.money.toString())
+            binding.dateTv.text = context.getString(R.string.holder_date, note.date)
+            binding.commentTv.text = context.getString(R.string.holder_comment, note.comment)
 
             if (note.type == context.getString(R.string.loan)) {
-                binding.typeTv.setTextColor(ContextCompat.getColor(context, R.color.red_a200))
+                binding.typeMoneyTv.setTextColor(ContextCompat.getColor(context, R.color.red_a200))
             } else {
-                binding.typeTv.setTextColor(ContextCompat.getColor(context, R.color.green_500))
+                binding.typeMoneyTv.setTextColor(ContextCompat.getColor(context, R.color.green_500))
+            }
+
+            if (note.repay == null) {
+                binding.repayTv.visibility = View.GONE
+            } else {
+                binding.repayTv.visibility = View.VISIBLE
+                binding.repayTv.text =
+                    context.getString(R.string.holder_part_repay, note.repay.toString())
             }
 
             binding.root.setOnClickListener {
