@@ -59,7 +59,7 @@ class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteViewHolder>() {
         // indexOf can't find note in list, so i compare id
         for ((index, n) in noteList.withIndex()) {
             if (note.id == n.id) {
-                noteList.set(index, note)
+                noteList[index] = note
                 notifyItemChanged(index)
                 break
             }
