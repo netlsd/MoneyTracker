@@ -22,8 +22,15 @@ class QueryConditionsActivity : AppCompatActivity() {
             val endDate = binding.endDateTv.text.toString()
             startQueryActivity(name, startDate, endDate)
         }
-        binding.clearImage.setOnClickListener {
-            clearQueryDate()
+
+        binding.clearNameImage.setOnClickListener {
+            binding.nameAutoTv.setText("")
+        }
+        binding.clearStartDateImage.setOnClickListener {
+            binding.startDateTv.text = ""
+        }
+        binding.clearEndDateImage.setOnClickListener {
+            binding.endDateTv.text = ""
         }
 
         setContentView(binding.root)
@@ -40,10 +47,5 @@ class QueryConditionsActivity : AppCompatActivity() {
         )
 
         binding.nameAutoTv.setAdapter(adapter)
-    }
-
-    private fun clearQueryDate() {
-        binding.startDateTv.text = ""
-        binding.endDateTv.text = ""
     }
 }

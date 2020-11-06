@@ -1,23 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical">
 
-    <AutoCompleteTextView
-        android:id="@+id/nameAutoTv"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:singleLine="true"
-        android:layout_marginEnd="20dp"
-        android:hint="@string/query_by_name" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <AutoCompleteTextView
+            android:id="@+id/nameAutoTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:hint="@string/query_by_name"
+            android:singleLine="true" />
+
+        <ImageView
+            android:id="@+id/clearNameImage"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_delete"
+            android:tint="@color/gray"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="20dp"
+            tools:ignore="ContentDescription" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
@@ -32,12 +52,32 @@
             android:paddingBottom="10dp"
             android:textSize="16sp" />
 
+        <ImageView
+            android:id="@+id/clearStartDateImage"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_delete"
+            android:tint="@color/gray"
+            tools:ignore="ContentDescription" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:text="@string/line" />
+
+        <ImageView
+            android:id="@+id/clearEndDateImage"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_delete"
+            android:tint="@color/gray"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/endDateTv"
@@ -59,13 +99,5 @@
         android:layout_height="60dp"
         android:layout_marginTop="20dp"
         android:text="@string/query" />
-
-    <ImageView
-        android:id="@+id/clearImage"
-        android:src="@drawable/ic_eraser"
-        android:padding="10dp"
-        android:layout_marginTop="40dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp" />
 
 </LinearLayout>
