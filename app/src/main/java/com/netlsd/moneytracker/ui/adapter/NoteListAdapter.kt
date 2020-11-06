@@ -95,6 +95,12 @@ class NoteListAdapter : RecyclerView.Adapter<NoteListAdapter.NoteViewHolder>() {
                     context.getString(R.string.holder_part_repay, note.repay.toString())
             }
 
+            if (note.comment.isNullOrEmpty()) {
+                binding.commentTv.visibility = View.GONE
+            } else {
+                binding.commentTv.visibility = View.VISIBLE
+            }
+
             binding.root.setOnClickListener {
                 val dialog = NoteDialog(context, note)
                 dialog.onDeleteListener = {

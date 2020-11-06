@@ -51,7 +51,7 @@ class NoteActivity : AppCompatActivity() {
         binding.dateTv.text = getCurrentDateString()
         binding.listView.adapter = listAdapter
         binding.listView.layoutManager = LinearLayoutManager(this)
-        // if has fixed size, adapter addNote not working
+        // if has fixed size, adapter addNote not immediately showing
 //        binding.listView.setHasFixedSize(true)
         binding.dateTv.setOnClickListener {
             showDatePicker(it as TextView)
