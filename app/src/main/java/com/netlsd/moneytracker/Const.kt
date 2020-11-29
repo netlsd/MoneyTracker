@@ -1,6 +1,6 @@
 package com.netlsd.moneytracker
 
-import androidx.datastore.preferences.preferencesKey
+import androidx.datastore.preferences.core.preferencesKey
 
 class Const {
     companion object {

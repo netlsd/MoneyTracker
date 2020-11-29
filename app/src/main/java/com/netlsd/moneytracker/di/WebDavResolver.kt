@@ -1,7 +1,7 @@
 package com.netlsd.moneytracker.di
 
-import androidx.datastore.DataStore
-import androidx.datastore.preferences.Preferences
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.netlsd.moneytracker.BetterSardine
 import com.netlsd.moneytracker.Const
 import com.thegrizzlylabs.sardineandroid.impl.OkHttpSardine

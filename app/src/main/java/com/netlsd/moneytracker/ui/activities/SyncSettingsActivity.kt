@@ -2,9 +2,9 @@ package com.netlsd.moneytracker.ui.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.datastore.DataStore
-import androidx.datastore.preferences.Preferences
-import androidx.datastore.preferences.edit
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
 import com.netlsd.moneytracker.BetterSardine
 import com.netlsd.moneytracker.Const
 import com.netlsd.moneytracker.R

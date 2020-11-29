@@ -2,8 +2,9 @@ package com.netlsd.moneytracker.di
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
-import androidx.datastore.DataStore
-import androidx.datastore.preferences.Preferences
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+
 import com.netlsd.moneytracker.BetterSardine
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
